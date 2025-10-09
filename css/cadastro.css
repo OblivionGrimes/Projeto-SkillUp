@@ -1,0 +1,49 @@
+body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+    }
+    .left-panel {
+      background-color: #000;
+      color: #fff;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+    .left-panel h1 {
+      font-weight: bold;
+      color: #ff0000;
+    }
+    .btn-login {
+      background-color: #000;
+      color: #ff0000;
+      border: 2px solid #fff;
+      border-radius: 10px;
+    }
+    .btn-login:hover {
+      background-color: #ff0000;
+      color: #fff;
+    }
+    .right-panel {
+      background-color: #1E2A50;
+      color: #fff;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .form-control, .form-select {
+      border-radius: 8px;
+    }
+    .btn-cadastrar {
+      background-color: #ff0000;
+      color: #fff;
+      border-radius: 10px;
+    }
+    .btn-cadastrar:hover {
+      background-color: #cc0000;
+    }

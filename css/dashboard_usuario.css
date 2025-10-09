@@ -1,0 +1,146 @@
+body {
+    background-color: #06012e;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+/* Cards */
+.card {
+    border-radius: 10px;
+    background-color: #1E2A50;
+    color: #fff;
+    padding: 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.03);
+}
+
+
+/* Botões de resgatar benefícios */
+.btn-resgatar {
+    background-color: #ffcc00;
+    color: #000;
+    border-radius: 8px;
+    border: none;
+}
+
+.btn-resgatar:hover {
+    background-color: #e6b800;
+}
+
+/* Abas */
+.nav-pills .nav-link {
+    border-radius: 8px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.nav-pills .nav-link.active {
+    background-color: #0004f5;
+    color: #fff;
+}
+
+/* Lista de histórico */
+.list-group-item {
+    background-color: #2A3A70; 
+    color: #fff;
+    border: none;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.list-group-item:hover {
+    background-color: #1100fd; 
+    color: #fff;
+    transform: scale(1.02);
+}
+
+/* Pontos em destaque */
+.text-warning {
+    color: #ffcc00 !important;
+}
+
+/* Modal */
+.modal-content {
+    background-color: #1E2A50;
+    color: #fff;
+    border-radius: 10px;
+}
+
+.modal-header, .modal-body {
+    color: #fff;
+}
+
+.btn-close {
+    filter: invert(1);
+}
+
+/* Aba Pendências */
+#pendencias .card {
+  border-radius: 15px;
+  background-color: #1E2A50;
+  color: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#pendencias .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+#pendencias h5 {
+  color: #ffcc00;
+}
+
+#pendencias p {
+  color: #fff;
+}
+
+#pendencias .btn-outline-danger {
+  border-color: #ff4d4d;
+  color: #ff4d4d;
+}
+
+#pendencias .btn-outline-danger:hover {
+  background-color: #ff4d4d;
+  color: #fff;
+}
+
+/* Modal motivo rejeição */
+#motivoModal .modal-content {
+  background-color: #1E2A50;
+  color: #fff;
+  border-radius: 10px;
+}
+
+/* Card de boas-vindas */
+.welcome-card {
+  background: #1E2A50; 
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  padding: 30px 20px;
+  color: #fff;
+  border: 2px solid #0026ff; 
+}
+
+/* Título do card */
+.welcome-card-title {
+  font-family: 'Orbitron', sans-serif; 
+  font-size: 2rem;
+  color: #ffffff;
+  margin-bottom: 15px;
+}
+
+/* Pontos */
+.welcome-card-points {
+  font-family: 'Arial', sans-serif;
+  font-size: 1.3rem;
+  color: #ffcc00;
+}
+

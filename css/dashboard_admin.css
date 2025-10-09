@@ -1,0 +1,88 @@
+
+body {
+    /* REGRAS FLEXBOX COM PRIORIDADE MÁXIMA */
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 100vh !important;
+    
+    /* Regras de Estilo Pessoal (Opcional usar !important aqui) */
+    background-color: #06012e;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    
+    /* NÃO ESQUEÇA O MARGIN e o PADDING-TOP */
+    margin: 0 !important;
+    padding-top: 80px !important; /* Para compensar a navbar fixa */
+}
+
+/* Cards */
+.card {
+    background-color: #2A3A70; 
+    color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+/* Botões padrão */
+.btn-danger {
+    background-color: #ff4d4d;
+    color: #fff;
+    border-radius: 8px;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #cc0000;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: #fff;
+    border-radius: 8px;
+    border: none;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+/* Inputs e selects */
+.form-control, .form-select {
+    border-radius: 8px;
+}
+
+/* Abas */
+.nav-pills .nav-link {
+    border-radius: 8px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.nav-pills .nav-link.active {
+   background-color: #0004f5;
+}
+
+/* Links dentro dos cards */
+.card a {
+    color: #ffcc00;
+    text-decoration: none;
+}
+
+.card a:hover {
+    text-decoration: underline;
+}
+
+/* Cards de evidências mais compactos */
+#evidencias .card {
+    padding: 10px;
+    font-size: 0.9rem;
+}
+#evidencias .card p {
+    margin-bottom: 5px;
+}
+
+/* Espaçamento dos botões dentro dos cards */
+.d-flex.gap-2 {
+    justify-content: center;
+}

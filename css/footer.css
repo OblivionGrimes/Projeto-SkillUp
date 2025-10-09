@@ -1,0 +1,28 @@
+
+.footer {
+  background: linear-gradient(135deg, #0F1C3F, #1E2A50);
+  border-top: 3px solid #FFC107;
+}
+
+.footer-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ff0000;
+  text-shadow: 2px 2px #ffcc00;
+}
+
+.footer-links a {
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.footer-links a:hover {
+  color: #ffcc00;
+  text-decoration: underline;
+}
+
+.footer small {
+  display: block;
+  margin-top: 5px;
+  color: #ccc;
+}
