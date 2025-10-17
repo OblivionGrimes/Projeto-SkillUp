@@ -13,13 +13,127 @@
 </head>
 
 <body>
- <?php 
-  include 'componentes/nav_bar.php'; 
-  
-  include("includes.php");
+  <?php 
+    include 'componentes/nav_bar.php'; 
+    
+    include("includes.php");
 
     if(!empty($_SESSION["S_User_ID"])) {
- ?>
+
+      // ainda não esta fazendo nada (setando)
+      $Nome_Grupo = '';
+      $ID_Grupo = '';
+      $ID_MISSAO = '';
+      $OBS_MISSAO = '';
+
+      if(isset($_POST['BT_EDIT_GRUPO'])){
+        $ID_Grupo = base64_decode($_POST['ID_Grupo']);
+
+        $array_gp =
+          $mysqli->query("select 
+                                    Nome_Grupo,
+                                    ID_Grupo
+                                  from
+                                    cad_grupos
+                                  where
+                                    ID_Grupo = '".$ID_Grupo."' and
+                                    FK_User_ID = '".$_SESSION['S_User_ID']."'
+                                  limit 1 ");
+        $resG = $array_gp->fetch_all();
+        $Nome_Grupo = $resG[0][0];
+        $ID_Grupo = $resG[0][1];
+
+      }
+
+      // Form do grupo
+      if(isset($_POST["BT_SALVAR_GRUPO"])) {
+        $Nome_Grupo = trim($_POST["Nome_Grupo"]);
+        $ID_Grupo = $_POST["ID_Grupo"];
+        $Data_Grupo = date("Y-m-d H:i:s");
+        $Exc_Grupo = 0;
+
+        if($ID_Grupo == '') { // criação
+
+          $stmt = $mysqli->prepare('insert into cad_grupos (FK_User_ID, Nome_Grupo, Exc_Grupo, Data_Grupo) values (?, ?, ?, ?)');
+          $stmt->bind_param('isis', $_SESSION['S_User_ID'], $Nome_Grupo, $Exc_Grupo, $Data_Grupo);
+          $stmt->execute();
+
+          if($stmt->error){
+            $FS_CONFIG->fs_alerta('Algo inesperado aconteceu!','erro');
+          }else{
+            $FS_CONFIG->fs_alerta('Grupo criado com sucesso!','sucesso');
+          }
+
+        }elseif($ID_Grupo != '') { // Atualização
+
+          $stmt = $mysqli->prepare('update cad_grupos set Nome_Grupo = ? where ID_Grupo = ?');
+          $stmt->bind_param('si', $Nome_Grupo, $ID_Grupo);
+          $stmt->execute();
+          
+          $Nome_Grupo = '';
+          $ID_Grupo = '';
+
+          if($stmt->error){
+            $FS_CONFIG->fs_alerta('Algo inesperado aconteceu!','erro');
+          }else{
+            $FS_CONFIG->fs_alerta('Nome do grupo atualizado com sucesso!','sucesso');
+          }
+
+        }
+      } // Fim Form do grupo
+
+      // EXC Grupo
+      if(isset($_POST['BT_EXC_GRUPO'])) {
+        $ID_Grupo = base64_decode($_POST['ID_Grupo']);
+        $Exc_Grupo = 1;
+
+        $stmt = $mysqli->prepare('update cad_grupos set Exc_Grupo = ? where ID_Grupo = ? and FK_User_ID = ?');
+        $stmt->bind_param("iii", $Exc_Grupo, $ID_Grupo, $_SESSION['S_User_ID']);
+        $stmt->execute();
+
+        if($stmt->error){
+          $FS_CONFIG->fs_alerta('Algo inesperado aconteceu!','erro');
+        }else{
+          $FS_CONFIG->fs_alerta('Grupo excluido com sucesso!','sucesso');
+          $ID_Grupo = '';
+        }
+
+      } // Fim exc grupo
+
+      // Salvando as missões 
+      if(isset($_POST['BT_SALVAR_MISSAO'])) {
+        $ID_MISSAO = base64_decode($_POST['ID_MISSAO']);
+        $ID_Grupo = base64_decode($_POST['id_grupo']);
+        $OBS_MISSAO = trim($_POST['obs_missao']);
+        $PONTOS = $_POST['pontos'];
+        $NOME_MISSAO = $_POST['nome_missao'];
+        $DATA_MISSAO = date("Y-m-d H:m:s");
+
+        if($ID_MISSAO == ''){
+          $stmt = $mysqli->prepare("insert into cad_missao (FK_User_ID, FK_ID_Grupo, Nome_Missao, Obs_Missao, Pontos_Missao, Data_Missao) values (?, ?, ?, ?, ?, ?)");
+          $stmt->bind_param("iissis", $_SESSION['S_User_ID'], $ID_Grupo, $NOME_MISSAO, $OBS_MISSAO, $PONTOS, $DATA_MISSAO);
+          $stmt->execute();
+
+          if($stmt->error){
+            $FS_CONFIG->fs_alerta('Algo inesperado aconteceu!','erro');
+          }else{
+            $FS_CONFIG->fs_alerta('Missão criada com sucesso!','sucesso');
+          }
+        }elseif($ID_MISSAO != ''){
+          $stmt = $mysqli->prepare("update cad_missao set FK_User_ID = ?, FK_ID_Grupo = ?, Nome_Missao = ?, Obs_Missao = ?, Pontos_Missao = ?, Data_Missao = ? where ID_Missao = ?");
+          $stmt->bind_param("iissis", $_SESSION['S_User_ID'], $ID_Grupo, $NOME_MISSAO, $OBS_MISSAO, $PONTOS, $DATA_MISSAO, $ID_MISSAO);
+          $stmt->execute();
+
+          if($stmt->error){
+            $FS_CONFIG->fs_alerta('Algo inesperado aconteceu!','erro');
+          }else{
+            $FS_CONFIG->fs_alerta('Missão atualizada com sucesso!','sucesso');
+          }
+        }
+
+      } // Fim salvando as missões 
+
+  ?>
   <main class="content-wrapper"> 
     <div class="container py-5">
       <h2 class="mb-4">Painel do Administrador</h2>
@@ -49,51 +163,82 @@
         <!-- Grupos -->
         <div class="tab-pane fade show active" id="grupos" role="tabpanel">
           <h4>Criar Grupo</h4>
-          <form class="d-flex mb-4">
-            <input type="text" name="nome_grupo" class="form-control me-4" placeholder="Nome do grupo" required>
-            <button type="submit" class="btn btn-primary">Criar</button>
+          <form method="POST" class="d-flex mb-4">
+            <input type="text" name="Nome_Grupo" id="Nome_Grupo" value="<?php echo $Nome_Grupo ?>" class="form-control me-4" placeholder="Nome do grupo" required>
+            <input type="hidden" name="ID_Grupo" id="ID_Grupo" value="<?php echo $ID_Grupo; ?>" class="form-control me-4" placeholder="Nome do grupo"> <!-- Adicionar o retorno do ID_Grupo aqui -->
+            <button type="submit" name="BT_SALVAR_GRUPO" id="BT_SALVAR_GRUPO" class="btn btn-primary">Criar</button>
           </form>
 
           <h4>Grupos Existentes</h4>
           <div class="row g-3 mt-2">
-            <div class="col-md-4">
-              <div class="card p-3 text-center">
-                <h5 class="text-white">Grupo TI</h5>
-                <div class="d-flex justify-content-center gap-2 mt-2">
-                  <button class="btn btn-danger btn-sm">Excluir</button>
+              <?php
+                $array = 
+                  $mysqli->query("select
+                                          *
+                                        from
+                                          cad_grupos
+                                        where
+                                          FK_User_ID = '".$_SESSION['S_User_ID']."' and
+                                          Exc_Grupo = 0
+                                        order by
+                                          Nome_Grupo ");
+                while($row = $array->fetch_assoc()) {
+              ?>
+                <div class="col-md-4">
+                  <div class="card p-3 text-center">
+                    <h5 class="text-white"><?php echo $row['Nome_Grupo'] ?></h5>
+                    <div class="d-flex justify-content-center gap-2 mt-2">
+                      <form method="POST">
+                        <input type="hidden" name="ID_Grupo" id="ID_Grupo" value="<?php echo base64_encode($row['ID_Grupo']); ?>">
+                        <button type="submit" name="BT_EDIT_GRUPO" id="BT_EDIT_GRUPO" class="btn btn-info btn-sm">Editar</button>
+                        <button type="submit" name="BT_EXC_GRUPO" id="BT_EXC_GRUPO" class="btn btn-danger btn-sm">Excluir</button>
+                      </form>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              <?php
+                }
+              ?>
             </div>
-            <div class="col-md-4">
-              <div class="card p-3 text-center">
-                <h5 class="text-white">Grupo Vendas</h5>
-                <div class="d-flex justify-content-center gap-2 mt-2">
-                  <button class="btn btn-danger btn-sm">Excluir</button>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- Missões -->
         <div class="tab-pane fade" id="missoes" role="tabpanel">
           <h4>Criar Missão</h4>
-          <form class="mb-4">
+          <form method="POST" class="mb-4">
             <div class="mb-2">
-              <input type="text" name="nome_missao" class="form-control" placeholder="Nome da missão" required>
+              <input type="text" name="nome_missao" id="nome_missao" class="form-control" placeholder="Nome da missão" required>
             </div>
             <div class="mb-2">
-              <input type="number" name="pontos" class="form-control" placeholder="Pontos" required>
+              <input type="number" name="pontos" id="pontos" class="form-control" placeholder="Pontos" required min="1" max="1000">
             </div>
             <div class="mb-2">
-              <select name="grupo" class="form-select" required>
-                <option value="">Selecione o grupo</option>
-                <option value="TI">TI</option>
-                <option value="Vendas">Vendas</option> 
+              <select name="id_grupo" id="id_grupo" class="form-select" required>
+                <?php
+                  $array_S =
+                    $mysqli->query("select 
+                                              Nome_Grupo,
+                                              ID_Grupo
+                                            from
+                                              cad_grupos
+                                            where
+                                              (FK_User_ID = '".$_SESSION['S_User_ID']."' or ID_Grupo = 1) and
+                                              Exc_Grupo = 0");
+                  while($rowS = $array_S->fetch_assoc()) {
+                ?>
+                  <option value="<?php echo base64_encode($rowS['ID_Grupo']); ?>"><?php echo $rowS['Nome_Grupo']; ?></option>
+                <?php
+                  }
+                ?>
               </select>
               <br>
             </div>
-            <button type="submit" class="btn btn-primary">Criar Missão</button>
+            <div class="mb-2">
+              <input type="text" name="obs_missao" id="obs_missao" value="<?php echo $OBS_MISSAO; ?>" class="form-control" placeholder="Observações">
+              <input type="hidden" name="ID_MISSAO" id="ID_MISSAO" value="<?php echo base64_encode($ID_MISSAO); ?>">
+            </div>
+            <br>
+            <button type="submit" name="BT_SALVAR_MISSAO" id="BT_SALVAR_MISSAO" class="btn btn-primary">Criar Missão</button>
           </form>
 
           <h4>Missões Existentes</h4>
